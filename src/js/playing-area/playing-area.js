@@ -1,33 +1,51 @@
 export default class PlayingArea {
-  // constructor(element) {
-  //   this._element = element;
-  // }
-  const playingArea = document.querySelector('.playing-area');
-  
-  const fragment = document.createDocumentFragment();
-
-  for (let i = 0; i < 16; i++) {
-    const item = document.createElement('li');
-    item.className = 'playing-area__item';
-    fragment.appendChild(item);
+  constructor(container) {
+    this.container = container;
+    this.intervalId = null; 
+    this.init();
   }
-  playingArea.appendChild(fragment);
 
-  randomMovingGoblin() {
-    const goblinImg = document.createElement('img');
-    goblinImg.classList.add('playing-area__img');
-    goblinImg.src = 'https://raw.githubusercontent.com/netology-code/ahj-homeworks/video/dom/pic/goblin.png';
+  init() {
+    this.container.innerHTML = ''; 
 
-    const playingItemsCollection = document.querySelectorAll('.playing-area__item');
+    for (let i = 0; i < 16; i++) {
+      const item = document.createElement('li');
+      item.className = 'playing-area__item';
+      this.container.appendChild(item);
+    }
+  }
 
-    for(const playingItem of playingItemsCollection) {
-      if(playingItem.firstElementChild) {
-        playingItem.firstElementChild.remove();
-      }
+  randomMovingGoblin = () => {
+    const items = this.container.querySelectorAll('.playing-area__item');
+    const current = Array.from(items).findIndex(item => item.classList.contains('goblin'));
+
+    let randomIndex;
+
+    do {
+      randomIndex = Math.floor(Math.random() * items.length);
+    } while (randomIndex === current);
+
+    items.forEach(item => item.classList.remove('goblin'));
+
+    items[randomIndex].classList.add('goblin');
+  };
+
+  start() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId); 
+    }
+    this.intervalId = setInterval(this.randomMovingGoblin, 1000);
+  }
+
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
 
-    const randomPlayingItem = Math.floor(Math.random() * playingItemsCollection.length);
-
-    playingItemsCollection[randomPlayingItem].append(goblinImg);
+    const goblin = this.container.querySelector('.goblin');
+    if (goblin) {
+      goblin.classList.remove('goblin');
+    }
   }
 }
