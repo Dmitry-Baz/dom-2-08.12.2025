@@ -2,6 +2,16 @@ export default class PlayingArea {
   // constructor(element) {
   //   this._element = element;
   // }
+  const playingArea = document.querySelector('.playing-area');
+  
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < 16; i++) {
+    const item = document.createElement('li');
+    item.className = 'playing-area__item';
+    fragment.appendChild(item);
+  }
+  playingArea.appendChild(fragment);
 
   randomMovingGoblin() {
     const goblinImg = document.createElement('img');
